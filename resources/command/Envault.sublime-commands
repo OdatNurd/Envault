@@ -1,0 +1,22 @@
+[
+  { "caption": "Preferences: Envault Settings",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/Envault/resources/setting/Envault.sublime-settings",
+      "default": "{\n\t$0\n}\n"
+    }
+  },
+  // { "caption": "Preferences: Envault Key Bindings",
+  //   "command": "edit_settings",
+  //   "args": {
+  //     "base_file": "${packages}/Envault/resources/setting/Default (${platform}).sublime-keymap",
+  //     "default": "[\n\t$0\n]\n"
+  //   }
+  // },
+  { "caption": "Envault: View Documentation",
+    "command": "open_url",
+    "args": {
+      "url": "https://envault.odatnurd.net/"
+    }
+  },
+]

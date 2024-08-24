@@ -1,5 +1,6 @@
 # Sublime Text project and workspace files
-*.sublime-*
+*.sublime-project
+*.sublime-workspace
 
 # Exclude files that are related to the documentation generation.
 .venv/

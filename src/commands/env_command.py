@@ -8,6 +8,14 @@ from os import environ
 ## ----------------------------------------------------------------------------
 
 
+# Capture the version of the current plugin host that the command is running
+# in; this is used for logging and to help determine the command name
+host = "%d.%d" % (version_info.major, version_info.minor)
+
+
+## ----------------------------------------------------------------------------
+
+
 class EnvaultEnvironmentCommand(sublime_plugin.WindowCommand):
     """
     Based on the arguments provided, either set or restore the environment in
@@ -25,24 +33,21 @@ class EnvaultEnvironmentCommand(sublime_plugin.WindowCommand):
         presents its name differently depending on the plugin host that it
         runs within.
         """
-        if version_info >= (3, 8):
-            return "envault_internal_env"
-        else:
-            return "envault_internal_env_33"
+        return "envault_internal_env_%s" % (host.replace('.', ''))
 
 
-    def run(self, operation, env):
+    def run(self, command, operation, env):
         if operation == "set":
-            self.set_env(env)
+            self.set_env(command, env)
 
         elif operation == "restore":
-            self.restore_env()
+            self.restore_env(command)
 
         else:
-            print("Envault: unknown env operation '%s'" % operation)
+            print("Envault: unknown env operation '%s' in %s" % (operation, host))
 
 
-    def set_env(self, env):
+    def set_env(self, command, env):
         """
         Set the environment for the plugin host by extending the currently
         available environment with the keys from the provided dictionary.
@@ -53,11 +58,30 @@ class EnvaultEnvironmentCommand(sublime_plugin.WindowCommand):
         if self.original_env is None:
             self.original_env = environ.copy()
 
-        print("Envault: setting environment variables")
-        environ.update(env)
+        print("Envault: setting environment variables in %s for %s" % (host, command))
+
+        # It is possible that we might get triggered to set the environment
+        # while the environment is currently set, such as when a build triggers
+        # a target that itself triggers a command that is in the user's watch
+        # list.
+        #
+        # In order to ensure that we don't leak any environment, create a fresh
+        # copy of the original environment of the host, update it with the
+        # passed in environment, and then apply that environment.
+        new_env = self.original_env.copy()
+        new_env.update(env)
+
+        # If the new environment does not already have an ENVAULT key, then add
+        # one in here explicitly so that launched tasks can determine whether
+        # or not they are running in an envault controlled environment.
+        if "ENVAULT" not in new_env:
+            new_env["ENVAULT"] = "1"
+
+        environ.clear()
+        environ.update(new_env)
 
 
-    def restore_env(self):
+    def restore_env(self, command):
         """
         Restore the environment that was previously in effect prior to the
         last call to set_env().
@@ -67,7 +91,7 @@ class EnvaultEnvironmentCommand(sublime_plugin.WindowCommand):
 
         If the environment was not previously saved, then this will do nothing.
         """
-        print("Envault: removing environment variables")
+        print("Envault: removing environment variables in %s after %s" % (host, command))
 
         def restore():
             environ.clear()

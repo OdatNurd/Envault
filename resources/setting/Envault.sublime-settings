@@ -1,0 +1,14 @@
+{
+    // Envault always updates the environment whenever the "build" command is
+    // executed to ensure that the environment for any builds that trigger in
+    // a project have the appropriate environment.
+    //
+    // Additional window commands can be added here by name; whenever a command
+    // listed here is executed, the environment will be updated while it is
+    // actively running.
+    //
+    // The default ensures that directly executed Terminus terminals as well as
+    // explict invocations of the exec commands (outside of a build) also have
+    // an updated environment.
+    "added_watch_commands": ["exec", "terminus_exec", "terminus_open"]
+}

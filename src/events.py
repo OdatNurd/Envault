@@ -1,6 +1,8 @@
 import sublime
 import sublime_plugin
 
+from .core import ev_setting
+
 
 ## ----------------------------------------------------------------------------
 
@@ -23,41 +25,48 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         return command == "build" and not selecting
 
 
-    def on_window_command(self, window, command, args):
+    def is_watched_command(self, command):
+        """
+        Check to see if the command provided is within the list of commands
+        that the user has configured as one that should be watched, to extend
+        how the environment gets extended.
+        """
+        return command in ev_setting("added_watch_commands")
+
+
+    def execute_env_op(self, window, cmd, operation, env):
+        """
+        Execute the given environment update operation in both of the plugin
+        hosts, using the environment dictionary provided.
+        """
+        for env_cmd in ('envault_internal_env_38', 'envault_internal_env_33'):
+            window.run_command(env_cmd, {
+                "command": cmd,
+                "operation": operation,
+                "env": env
+            })
+
+
+    def on_window_command(self, window, cmd, args):
         """
         If the command about to be executed in the window is a valid build
         command, then trigger the command that will update the plugin host
         environment before the command executes.
         """
-        # We only care about build commands
-        if not self.is_build(command, args):
-            return
-
-        # Set in the environment prior to the command executing
-        for env_cmd in ('envault_internal_env', 'envault_internal_env_33'):
-            window.run_command(env_cmd, {
-                "operation": "set",
-                "env": {
-                    "ENVAULT": "ENABLED"
-                }
-            })
+        # We only care about build commands and watched commands
+        if self.is_build(cmd, args) or self.is_watched_command(cmd):
+            self.execute_env_op(window, cmd, "set", { })
 
 
-    def on_post_window_command(self, window, command, args):
+    def on_post_window_command(self, window, cmd, args):
         """
-        If the command that just executed in the window was a valid build
+        If the command that just `executed `in the window was a valid build
         command, then trigger the command that will restore the plugin host
         environment to what it was before the command originally executed.
         """
-        # We only care about build commands
-        if not self.is_build(command, args):
-            return
-
-        for env_cmd in ('i_am_the_command', 'i_am_the_command_33'):
-            window.run_command(env_cmd, {
-                "operation": "restore",
-                "env": {}
-            })
+        # We only care about build commands and watched commands
+        if self.is_build(cmd, args) or self.is_watched_command(cmd):
+            self.execute_env_op(window, cmd, "restore", { })
 
 
 ## ----------------------------------------------------------------------------
