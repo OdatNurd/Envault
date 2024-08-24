@@ -1,0 +1,9 @@
+# Don't include the documentation files and the control files used to generate
+# them into the generated archives, since that is used in order to create the
+# sublime-package file.
+docs/ export-ignore
+
+# Similarly, exclude Git and GitHub related control files.
+.github/ export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore

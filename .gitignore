@@ -1,0 +1,7 @@
+# Sublime Text project and workspace files
+*.sublime-*
+
+# Exclude files that are related to the documentation generation.
+.venv/
+.cache/
+site/
