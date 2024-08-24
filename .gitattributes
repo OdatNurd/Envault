@@ -11,3 +11,7 @@ docs/ export-ignore
 # Do not include our local file that reminds us on release procedures in the
 # generated package.
 RELEASE.md export-ignore
+
+# Do not include the file that is used to test the functionality of the package
+# during development in the final deployed package.
+envault.yml

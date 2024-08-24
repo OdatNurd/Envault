@@ -1,0 +1,5 @@
+apiKeyName: envault_dev_key
+url: http://localhost:8787/
+vars:
+  - other
+  - test/first
