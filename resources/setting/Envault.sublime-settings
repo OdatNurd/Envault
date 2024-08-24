@@ -10,5 +10,12 @@
     // The default ensures that directly executed Terminus terminals as well as
     // explict invocations of the exec commands (outside of a build) also have
     // an updated environment.
-    "added_watch_commands": ["exec", "terminus_exec", "terminus_open"]
+    "added_watch_commands": ["exec", "terminus_exec", "terminus_open"],
+
+    // When diagnosing issues with the package, this value can be set to true to
+    // enable additional debugging information.
+    //
+    // This makes the package more verbose and as such is not normally left
+    // turned on during normal usage.
+    "debug": false
 }

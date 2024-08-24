@@ -21,6 +21,8 @@ def loaded():
     ev_setting.default = {
         # Template file actually lists some packages here.
         "added_watch_commands": [],
+
+        "debug": False
     }
 
 
