@@ -5,3 +5,6 @@
 .venv/
 .cache/
 site/
+
+# Keep our simple TODO list out of the repo
+TODO

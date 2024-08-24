@@ -7,3 +7,7 @@ docs/ export-ignore
 .github/ export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
+
+# Do not include our local file that reminds us on release procedures in the
+# generated package.
+RELEASE.md export-ignore
