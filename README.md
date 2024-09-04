@@ -1,25 +1,22 @@
 # Envault
 
-This is where the README information for the package goes, which is shown to
-people on GitHub and is referenced from the Package Control website for the
-package.
+Envault is a Sublime Text package that wraps the
+[Envault Service](https://github.com/axel669/envault) by
+[@axel669](https://github.com/axel669).
 
-There should be a brief description here, as well as possibly some screenshots
-where appropriate. Screenshots should be stored in `docs/images` so that the
-link can reference them (in fact, before we go production, make a fake one and
-add it).
+Envault is a service that replaces `.env` files in your projects in favor of a
+`YAML` configuration file that serves the same purpose and:
 
-The screenshots can be elided from the documentation if needed by telling
-`mkdocs` what files in the `docs` folder it should not handle. There is no
-example of that currently (but, you know, add one when you do the thing above).
+- Can be checked into source control (without leaking secrets!) allowing you to
+  spin up fully configured development environments and deployments easily.
+- Allows you to share a common set of variable values, with a single change
+  propagating to all projects without any extra work.
 
-This package requires, at minimum, Sublime Text version 4180
+This particular package is a Sublime Text wrapper around the Envault service,
+allowing you to seamlessly use Envault in your Sublime projects with no extra
+tooling required.
 
-TODO:
-    - sandbox page with common stuff we will want like the admonition list and
-      the like.
-    - Ensure all pages are decent stubs, unlike what they are right now
-        - this includes verifying the social icons as well
+This package requires, at minimum, Sublime Text version 4180.
 
 ---
 
