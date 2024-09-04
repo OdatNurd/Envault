@@ -1,5 +1,7 @@
 import sublime
 
+import textwrap
+
 from ..lib.bootstrap import bootstrap_legacy_package
 
 
@@ -36,17 +38,26 @@ def unloaded():
 ## ----------------------------------------------------------------------------
 
 
-def log(message, *args, status=False, dialog=False):
+def log(msg, *args, dialog=False, error=False, status=False, **kwargs):
     """
-    Simple logging method; writes to the console and optionally also the status
-    message as well.
+    Generate a message to the console and optionally as either a message or
+    error dialog. The message will be formatted and dedented before being
+    displayed, and will be prefixed with its origin.
     """
-    message = message % args
-    print("Envault:", message)
+    msg = textwrap.dedent(msg.format(*args, **kwargs)).strip()
+
+    if error:
+        print("Envault error:")
+        return sublime.error_message(msg)
+
+    for line in msg.splitlines():
+        print("Envault: {msg}".format(msg=line))
+
     if status:
         sublime.status_message(message)
+
     if dialog:
-        sublime.message_dialog(message)
+        sublime.message_dialog(msg)
 
 
 def ev_syntax(file):
