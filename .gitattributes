@@ -14,4 +14,4 @@ RELEASE.md export-ignore
 
 # Do not include the file that is used to test the functionality of the package
 # during development in the final deployed package.
-envault.yml
+envault-config.yml
