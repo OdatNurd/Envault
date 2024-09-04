@@ -1,6 +1,7 @@
 from ..envault import reload
 
-reload("src", ["core", "events", "config_loader", "envault_request"])
+reload("src", ["core", "events", "config_loader", "env_cache",
+               "envault_request"])
 reload("src.commands")
 
 from . import core

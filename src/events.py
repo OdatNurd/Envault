@@ -2,6 +2,7 @@ import sublime
 import sublime_plugin
 
 from .core import ev_setting
+from .env_cache import fetch_env
 
 
 ## ----------------------------------------------------------------------------
@@ -39,6 +40,7 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         Execute the given environment update operation in both of the plugin
         hosts, using the environment dictionary provided.
         """
+        env = fetch_env(window)
         for env_cmd in ('envault_internal_env_38', 'envault_internal_env_33'):
             window.run_command(env_cmd, {
                 "command": cmd,
@@ -55,7 +57,8 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         """
         # We only care about build commands and watched commands
         if self.is_build(cmd, args) or self.is_watched_command(cmd):
-            self.execute_env_op(window, cmd, "set", { })
+            env = fetch_env(window)
+            self.execute_env_op(window, cmd, "set", env)
 
 
     def on_post_window_command(self, window, cmd, args):
