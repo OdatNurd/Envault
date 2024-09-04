@@ -21,4 +21,5 @@ __all__ = [
 
     # Commands
     "EnvaultEnvironmentCommand",
+    "EnvaultChooseConfigCommand",
 ]

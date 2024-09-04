@@ -19,4 +19,7 @@
       "url": "https://envault.odatnurd.net/"
     }
   },
+  { "caption": "Envault: Choose Active Config",
+    "command": "envault_choose_config"
+  },
 ]
