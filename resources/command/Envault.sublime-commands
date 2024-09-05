@@ -22,4 +22,7 @@
   { "caption": "Envault: Choose Active Config",
     "command": "envault_choose_config"
   },
+  { "caption": "Envault: Reload Config",
+    "command": "envault_reload_config"
+  },
 ]
