@@ -1,6 +1,8 @@
 import sublime
 import sublime_plugin
 
+from ..logging import log
+
 from ..envault_data import get_envault_config
 from ..env_cache import fetch_env
 
@@ -20,7 +22,10 @@ class EnvaultShowVariablesCommand(sublime_plugin.WindowCommand):
         config = get_envault_config(self.window)
         env = fetch_env(config)
 
-        def ignore(idx): pass
+        if not env:
+            return log(f"current configuration contains no variables", status=True)
+
+        def ignore(_): pass
 
         self.window.show_quick_panel(list(env.keys()),
             placeholder=config,
