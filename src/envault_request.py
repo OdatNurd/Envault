@@ -102,6 +102,7 @@ class EnvaultRequestThread(Thread):
                 env_keys = sublime.decode_value(body)
 
         except HTTPError as e:
+            log(f"error fetching from {self.url}")
             log(f"http error: {e.code}")
             log(f"error while fetching the contents of the config", error=True)
 
@@ -111,6 +112,7 @@ class EnvaultRequestThread(Thread):
             print(f"{str(e.read().decode('utf-8'))}")
 
         except URLError as e:
+            log(f"error fetching from {self.url}")
             log(f"url error: {e.reason}")
 
         sublime.set_timeout(lambda: self.callback(env_keys))
