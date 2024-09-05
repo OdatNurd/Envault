@@ -10,7 +10,7 @@ from textwrap import dedent
 
 
 # Get the name of the package that contains us
-PKG_NAME=__package__.split(".")[0]
+PKG_NAME=__name__.split(".")[0]
 
 # The resource path to the plugin that contains thje command that is
 # responsible for setting and restoring the environment.

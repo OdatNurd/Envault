@@ -11,14 +11,13 @@ from .settings import ev_setting
 ## ----------------------------------------------------------------------------
 
 
-def load_project_config(window, config):
+def load_project_config(config):
     """
-    Given a window and the envault configuration file that is currently set
-    within that window, fire a request to load the envault configuration for
-    that particular window.
+    Given a window's envault configuration file, schedule a fetch to get the
+    environment to use for it.
     """
     log(f"doing project load fetch for {config}")
-    load_and_fetch_config(config, window)
+    load_and_fetch_config(config)
 
 
 def check_project_for_envault_config(window):
@@ -46,7 +45,7 @@ def check_project_for_envault_config(window):
     # There is exactly one file; set it as the currently selected envault
     # config, then fire the load
     set_envault_config(window, configs[0])
-    load_project_config(window, configs[0])
+    load_project_config(configs[0])
 
 
 ## ----------------------------------------------------------------------------
@@ -132,7 +131,7 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         """
         config = get_envault_config(window)
         if config:
-            load_project_config(window, config)
+            load_project_config(config)
         else:
             check_project_for_envault_config(window)
 

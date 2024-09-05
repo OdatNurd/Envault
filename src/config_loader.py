@@ -114,18 +114,17 @@ def _accept_loaded_config(var_list, config_file):
 ## ----------------------------------------------------------------------------
 
 
-def load_and_fetch_config(config_file, window):
+def load_and_fetch_config(config_file):
     """
-    Given a filename that we presume exists and the window that it is
-    associated with, load it from disk and then invoke a request to actually
-    fetch the variables that go with the config.
+    Given an envault configuration filenam that we presume exists, load the
+    config and then invoke a request to the server to fetch the variables that
+    the config defines.
 
-    If there is an error loading the config file, an error dialog is displayed
-    and nothing else happens.
+    Any config load or validation error will result in error logs and a message
+    dialog indicating the problem.
 
-    Otherwise, once the fetch is complete the environment cache is updated with
-    the result; either updating the environment cache to add new values, or to
-    remove previous results if the request failed.
+    Sucessful loads from the server will update the cache; request failures
+    will get logged as well.
     """
     config = load_if_exists(config_file)
     if not config:

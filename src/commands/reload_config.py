@@ -23,7 +23,7 @@ class EnvaultReloadConfigCommand(sublime_plugin.WindowCommand):
         # reload it
         config = get_envault_config(self.window)
         log(f"reloading envault config {config}")
-        load_and_fetch_config(config, self.window)
+        load_and_fetch_config(config)
 
 
     def is_enabled(self):

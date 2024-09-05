@@ -97,7 +97,7 @@ class EnvaultChooseConfigCommand(sublime_plugin.WindowCommand):
         set_envault_config(self.window, config)
 
         # Load it up
-        load_and_fetch_config(config, self.window)
+        load_and_fetch_config(config)
 
 
     def input(self, args):

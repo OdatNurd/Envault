@@ -20,7 +20,7 @@ def load_window_configs():
         config = get_envault_config(window)
         if config:
             log(f"doing startup fetch for {config}")
-            load_and_fetch_config(config, window)
+            load_and_fetch_config(config)
 
 
 ## ----------------------------------------------------------------------------
