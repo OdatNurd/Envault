@@ -6,7 +6,7 @@ from sublime import ListInputItem
 from os.path import split, splitext
 from os import sep
 
-from ..core import get_envault_data, set_envault_data
+from ..envault_data import get_envault_config, set_envault_config
 from ..config_loader import scan_project_configs, load_and_fetch_config
 from ..logging import log
 
@@ -21,8 +21,7 @@ class ConfigInputHandler(sublime_plugin.ListInputHandler):
     """
     def __init__(self, window):
         # Get the currently selected config in this window, if any
-        envault = get_envault_data(window)
-        current = envault.get("current", "")
+        current = get_envault_config(window)
 
         # Get the full list of potential configuration files available in this
         # window; these files may or may not contain valid configs; all we can
@@ -94,11 +93,8 @@ class EnvaultChooseConfigCommand(sublime_plugin.WindowCommand):
         if config is None:
             return log('no envault configs found in project', status=True)
 
-        # Get the envault config for this window, store in the selected config
-        # file name, then store the config back into the window.
-        envault = get_envault_data(self.window)
-        envault["current"] = config
-        set_envault_data(self.window, envault)
+        # Store this configuration into the window.
+        set_envault_config(self.window, config)
 
         # Load it up
         load_and_fetch_config(config, self.window)

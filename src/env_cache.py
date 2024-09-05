@@ -2,7 +2,8 @@ import sublime
 
 from os.path import split
 
-from .core import ev_setting, get_envault_data
+from .core import ev_setting
+from .envault_data import get_envault_config
 from .logging import log
 
 
@@ -28,8 +29,8 @@ def store_env(window, new_env):
 
     If this window already has an entry, this will replace it.
     """
-    current_config = get_envault_data(window).get("current", None)
-    if current_config is None:
+    current_config = get_envault_config(window)
+    if not current_config:
         return log(f"unable to cache env; window {window.id()} has no config")
 
     log(f"loaded envault config from {split(current_config)[1]}", status=True)
@@ -60,7 +61,7 @@ def fetch_env(window):
 
     If there is no stored env, an empty dict will be returned.
     """
-    current_config = get_envault_data(window).get("current", None)
+    current_config = get_envault_config(window)
     if ev_setting("debug"):
         log(f"fetching environment for window {window.id()}")
         if current_config:
