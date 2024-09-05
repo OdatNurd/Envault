@@ -7,7 +7,7 @@ from os.path import split, splitext
 from os import sep
 
 from ..envault_data import get_envault_config, set_envault_config
-from ..config_loader import scan_project_configs, load_and_fetch_config
+from ..config_file import scan_project_configs, load_and_fetch_config
 from ..logging import log
 
 

@@ -21,6 +21,10 @@ from .settings import ev_setting
 # Any yaml file that exists in this folder is treated as a config file.
 CONFIG_FOLDER = "envault"
 
+# All Envault configuration files must, in addition to being in the above
+# mentioned folder, have an extension that matches this one.
+CONFIG_EXTENSION = ".yml"
+
 
 ## ----------------------------------------------------------------------------
 
@@ -150,7 +154,7 @@ def scan_folder(path):
     files = []
     with scandir(path) as scanner:
         for entry in scanner:
-            if entry.is_file() and entry.name.upper().endswith('.YML'):
+            if entry.is_file() and entry.name.lower().endswith(CONFIG_EXTENSION):
                 files.append(join(path, entry.name))
 
     return files

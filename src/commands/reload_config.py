@@ -2,7 +2,7 @@ import sublime
 import sublime_plugin
 
 from ..envault_data import get_envault_config
-from ..config_loader import load_and_fetch_config
+from ..config_file import load_and_fetch_config
 from ..logging import log
 
 

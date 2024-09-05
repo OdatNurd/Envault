@@ -2,7 +2,7 @@ import sublime
 
 from ..lib.bootstrap import bootstrap_legacy_package
 
-from .config_loader import load_and_fetch_config
+from .config_file import load_and_fetch_config
 from .envault_data import get_envault_config
 from .logging import log
 

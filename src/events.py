@@ -1,7 +1,7 @@
 import sublime
 import sublime_plugin
 
-from .config_loader import scan_project_configs, load_and_fetch_config
+from .config_file import scan_project_configs, load_and_fetch_config
 from .env_cache import has_env, fetch_env
 from .envault_data import get_envault_config, set_envault_config
 from .logging import log
