@@ -25,4 +25,7 @@
   { "caption": "Envault: Reload Config",
     "command": "envault_reload_config"
   },
+  { "caption": "Envault: Show Variables",
+    "command": "envault_show_variables"
+  },
 ]

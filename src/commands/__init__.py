@@ -1,10 +1,12 @@
 from ...envault import reload
 
-reload("src.commands", ["env_command","choose_config", "reload_config"])
+reload("src.commands", ["env_command","choose_config", "reload_config",
+                        "show_variables"])
 
 from .env_command import EnvaultEnvironmentCommand
 from .choose_config import EnvaultChooseConfigCommand
 from .reload_config import EnvaultReloadConfigCommand
+from .show_variables import EnvaultShowVariablesCommand
 
 __all__ = [
     # Command that adjusts the environment for us
@@ -14,4 +16,5 @@ __all__ = [
     # file
     "EnvaultChooseConfigCommand",
     "EnvaultReloadConfigCommand",
+    "EnvaultShowVariablesCommand",
 ]
