@@ -1,4 +1,5 @@
-from os.path import join, exists
+from os.path import isdir, join, exists
+from os import scandir
 
 from .core import log
 from ..yaml import safe_load
@@ -8,9 +9,11 @@ from ..yaml.scanner import ScannerError
 ## ----------------------------------------------------------------------------
 
 
-# The name of the configuration files that we look for that control the
-# variables returned by envault.
-CONFIG_FILENAME = "envault-config.yml"
+# Top level folders in the window can have folders by this name to indicate
+# that they have some number of configuration files present in them.
+#
+# Any yaml file that exists in this folder is treated as a config file.
+CONFIG_FOLDER = "envault"
 
 
 ## ----------------------------------------------------------------------------
@@ -79,6 +82,23 @@ def load_if_exists(config_filename):
 ## ----------------------------------------------------------------------------
 
 
+def scan_folder(path):
+    """
+    Scan the path that is provided for all files within it that appear to be
+    YAML files based on their extension, and return a list of them back.
+    """
+    files = []
+    with scandir(path) as scanner:
+        for entry in scanner:
+            if entry.is_file() and entry.name.upper().endswith('.YML'):
+                files.append(join(path, entry.name))
+
+    return files
+
+
+## ----------------------------------------------------------------------------
+
+
 def scan_project_configs(window):
     """
     Given a window, scan all of the top level folders that are open within that
@@ -86,10 +106,15 @@ def scan_project_configs(window):
 
     The return value is a list of all of the located potential configuration
     files. This DOES NOT validate that the configuration in the file is
-    correct, only that the file seems to exist.
+    correct, only that the file(s) seem to exist.
     """
-    files = [join(path, CONFIG_FILENAME) for path in window.folders()]
-    return [f for f in files if exists(f)]
+    files = []
+
+    paths = filter(isdir, [join(p, CONFIG_FOLDER) for p in window.folders()])
+    for path in paths:
+        files.extend(scan_folder(path))
+
+    return files
 
 
 ## ----------------------------------------------------------------------------
