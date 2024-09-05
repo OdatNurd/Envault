@@ -1,22 +1,19 @@
 import sublime
 
-from .core import log, ev_setting
+from os.path import split
+
+from .core import log, ev_setting, get_envault_data
 
 
 ## ----------------------------------------------------------------------------
 
 
-# A simple object for caching the environment that's in use in any particular
-# window.
+# A simple object for caching the environment that was loaded for any
+# particular configuration file loaded this session.
 #
-# In the dict, the key is the ID value of a window, and the value is the
-# list of environment variables.
-#
-# TODO: This should actually use as the key, the name of the config file that
-#       is in use in the window as a complete path; then any window that has
-#       the same folder open can use it, we can close and re-open a window and
-#       have the same config available, and we don't need to track windows
-#       closing so we can clean this up (which is currently not done).
+# In the dict, the key is the fully qualified and absolute filename of an
+# Envault config, and the value is the result of making a query for the
+# variables associated with that file.
 _env_cache = { }
 
 
@@ -30,11 +27,16 @@ def store_env(window, new_env):
 
     If this window already has an entry, this will replace it.
     """
+    current_config = get_envault_data(window).get("current", None)
+    if current_config is None:
+        return log(f"unable to cache env; window {window.id()} has no config")
+
+    log(f"loaded envault config from {split(current_config)[1]}", status=True)
+
     if ev_setting("debug"):
-        log(f"storing new environment for window {window.id()}")
         log(f"variables: {list(new_env.keys())}")
 
-    _env_cache[window.id()] = new_env
+    _env_cache[current_config] = new_env
 
 
 def clear_env(window):
@@ -57,13 +59,17 @@ def fetch_env(window):
 
     If there is no stored env, an empty dict will be returned.
     """
+    current_config = get_envault_data(window).get("current", None)
     if ev_setting("debug"):
         log(f"fetching environment for window {window.id()}")
+        if current_config:
+            log(f"config file name is {current_config}")
 
-    env = _env_cache.get(window.id(), None)
-    if env is None and ev_setting("debug"):
-        log(f"no environment set for window")
+    env = _env_cache.get(current_config, None)
+    if env is None:
         env = {}
+        if ev_setting("debug"):
+            log(f"no environment set for window")
 
     return env
 
