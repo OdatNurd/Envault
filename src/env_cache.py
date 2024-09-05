@@ -68,4 +68,12 @@ def fetch_env(config_file):
     return env
 
 
+def has_env(config_file):
+    """
+    Test to see if the given configuration file has previously been loaded
+    and the variables fetched.
+    """
+    return config_file in _env_cache
+
+
 ## ----------------------------------------------------------------------------

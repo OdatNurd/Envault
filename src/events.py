@@ -2,7 +2,7 @@ import sublime
 import sublime_plugin
 
 from .config_loader import scan_project_configs, load_and_fetch_config
-from .env_cache import fetch_env
+from .env_cache import has_env, fetch_env
 from .envault_data import get_envault_config, set_envault_config
 from .logging import log
 from .settings import ev_setting
@@ -11,13 +11,16 @@ from .settings import ev_setting
 ## ----------------------------------------------------------------------------
 
 
-def load_project_config(config):
+def load_project_config(config_file):
     """
     Given a window's envault configuration file, schedule a fetch to get the
     environment to use for it.
     """
-    log(f"doing project load fetch for {config}")
-    load_and_fetch_config(config)
+    if has_env(config_file):
+        return log(f"no fetch needed; already loaded {config_file}")
+
+    log(f"doing project load fetch for {config_file}")
+    load_and_fetch_config(config_file)
 
 
 def check_project_for_envault_config(window):
