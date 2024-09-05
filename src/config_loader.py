@@ -2,8 +2,12 @@ from os.path import isdir, join, exists
 from os import scandir
 
 from .core import log
+
 from ..yaml import safe_load
 from ..yaml.scanner import ScannerError
+
+from .env_cache import store_env, clear_env
+from .envault_request import EnvaultRequestThread
 
 
 ## ----------------------------------------------------------------------------
@@ -56,27 +60,77 @@ def load_if_exists(config_filename):
     """
     Given a fully qualified path to a configuration file, attempt to load it.
 
-    The return value is None if the file doesn't exist, fails to load or does
-    not conform to the schema for configuration files. Otherwise the return is
-    a dict that represents the contents of the configuration.
+    The return value is None if the file doesn't exist, False if it fails to
+    load or does not conform to the schema for configuration files, or  is a
+    dict that represents the contents of the configuration.
 
     In cases where the configuration file exists but is broken, an error is
     logged to ensure the user knows that their file is broken.
     """
-    if exists(config_filename):
-        try:
-            with open(config_filename, "r") as config_file:
-                return validate_config(config_filename, safe_load(config_file))
+    if not exists(config_filename):
+        return log(f"file '{config_filename}' does not exist")
 
-        except ScannerError as e:
-            log(f"error loading: {config_filename}:")
-            log(str(e))
+    try:
+        with open(config_filename, "r") as config_file:
+            return validate_config(config_filename, safe_load(config_file))
 
-        except Exception as e:
-            log(f"error loading: {config_filename}:")
-            log(str(e))
+    except ScannerError as e:
+        log(f"error loading: {config_filename}:")
+        log(str(e))
 
-        return False
+    except Exception as e:
+        log(f"error loading: {config_filename}:")
+        log(str(e))
+
+    return False
+
+
+## ----------------------------------------------------------------------------
+
+
+def _accept_loaded_config(var_list, window):
+    """
+    Invoked after a call to load_and_fetch_config() to accept the loaded config
+    data, if any.
+
+    This will update the environment cache associated with the result, either
+    storing in a new config or clobbering one that might have already existed
+    from a previous call, depending on whether or not it worked.
+    """
+    if var_list is None:
+        log("no variables to set; request failed")
+        clear_env(window)
+    else:
+        store_env(window, var_list)
+
+
+## ----------------------------------------------------------------------------
+
+
+def load_and_fetch_config(config_filename, window):
+    """
+    Given a filename that we presume exists and the window that it is
+    associated with, load it from disk and then invoke a request to actually
+    fetch the variables that go with the config.
+
+    If there is an error loading the config file, an error dialog is displayed
+    and nothing else happens.
+
+    Otherwise, once the fetch is complete the environment cache is updated with
+    the result; either updating the environment cache to add new values, or to
+    remove previous results if the request failed.
+    """
+    config = load_if_exists(config_filename)
+    if not config:
+        return log("""
+            Error loading the Envault config file; see the
+            console for error details.
+            """, error=True)
+
+    # Kick off a background request to fetch the actual environment keys
+    # that are being requested by this config.
+    EnvaultRequestThread(**config, callback=
+                         lambda r: _accept_loaded_config(r, window)).start()
 
 
 ## ----------------------------------------------------------------------------

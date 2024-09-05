@@ -7,10 +7,7 @@ from os.path import split, splitext
 from os import sep
 
 from ..core import log, get_envault_data, set_envault_data
-from ..config_loader import scan_project_configs, load_if_exists
-
-from ..envault_request import EnvaultRequestThread
-from ..env_cache import store_env, clear_env
+from ..config_loader import scan_project_configs, load_and_fetch_config
 
 
 ## ----------------------------------------------------------------------------
@@ -103,7 +100,7 @@ class EnvaultChooseConfigCommand(sublime_plugin.WindowCommand):
         set_envault_data(self.window, envault)
 
         # Load it up
-        self.load_config(config)
+        load_and_fetch_config(config, self.window)
 
 
     def input(self, args):
@@ -113,42 +110,6 @@ class EnvaultChooseConfigCommand(sublime_plugin.WindowCommand):
 
     def input_description(self):
         return "Envault Config"
-
-
-    def load_config(self, config_file):
-        """
-        Given the name of an Envault configuration file, load and validate it,
-        and, if successfull, kick off a background task to fetch the actual
-        variables associated with the file so they can be attached to the
-        window.
-        """
-        # Load and validate the configuration file; if it does not seem to
-        # appear to be valid, we can log an error and return right away.
-        config = load_if_exists(config_file)
-        if not config:
-            return log("""
-                Error loading the Envault config file; see the
-                console for error details.
-                """, error=True)
-
-        # Kick off a background request to fetch the actual environment keys
-        # that are being requested by this config.
-        EnvaultRequestThread(**config,
-                             callback=lambda r: self.accept_variables(r, self.window)
-                            ).start()
-
-
-    def accept_variables(self, vars, window):
-        """
-        Invoked when the request to Envault for variables is returned; either
-        store the result in the window, or clobber the existing environment,
-        depending on whether or not the request suceeded or not.
-        """
-        if vars is None:
-            log("no variables to set; request failed")
-            clear_env(window)
-        else:
-            store_env(window, vars)
 
 
 ## ----------------------------------------------------------------------------
