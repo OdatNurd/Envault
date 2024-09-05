@@ -1,9 +1,4 @@
-import sublime
-
-from os.path import split
-
 from .settings import ev_setting
-from .envault_data import get_envault_config
 from .logging import log
 
 
@@ -22,38 +17,38 @@ _env_cache = { }
 ## ----------------------------------------------------------------------------
 
 
-def store_env(window, new_env):
+def store_env(config_file, new_env):
     """
-    For the provided window, store the new environment dict provided as the
-    environment to apply in that window.
+    Given the full path to a configuration file and the environment result of
+    loading it, cache the environment variables into the cache, so that they
+    can be retreived later.
 
-    If this window already has an entry, this will replace it.
+    If this configuration file already has an entry in the cache, this will
+    replace it.
     """
-    current_config = get_envault_config(window)
-    if not current_config:
-        return log(f"unable to cache env; window {window.id()} has no config")
-
-    log(f"loaded envault config from {split(current_config)[1]}", status=True)
+    if not config_file:
+        return log(f"unable to cache env; no config provided")
 
     if ev_setting("debug"):
-        log(f"variables: {list(new_env.keys())}")
+        log(f"storing environment for {config_file}")
 
-    _env_cache[current_config] = new_env
+    _env_cache[config_file] = new_env
 
 
-def clear_env(window):
+def clear_env(config_file):
     """
-    For the provided window, remove the stored environment for that window, if
-    any. This will cause all fetches to return the default empty dict.
+    For the given configuration file, remove the stored environment, if any.
+    This will cause all future cache fetches for this config to return an empty
+    dict until the cache is updated with new results.
     """
     if ev_setting("debug"):
-        log(f"deleting environment for window {window.id()}")
+        log(f"deleting environment for {config_file}")
 
-    if window.id() in _env_cache:
-        del _env_cache[window.id()]
+    if config_file in _env_cache:
+        del _env_cache[config_file]
 
 
-def fetch_env(window):
+def fetch_env(config_file):
     """
     Fetch the appropriate environment to use for the given window; the return
     is a dict of all of the variables and the values therein to be used within
@@ -61,17 +56,14 @@ def fetch_env(window):
 
     If there is no stored env, an empty dict will be returned.
     """
-    current_config = get_envault_config(window)
     if ev_setting("debug"):
-        log(f"fetching environment for window {window.id()}")
-        if current_config:
-            log(f"config file name is {current_config}")
+        log(f"using environment for {config_file}")
 
-    env = _env_cache.get(current_config, None)
+    env = _env_cache.get(config_file, None)
     if env is None:
         env = {}
         if ev_setting("debug"):
-            log(f"no environment set for window")
+            log(f"no environment available; using empty default")
 
     return env
 

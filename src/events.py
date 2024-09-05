@@ -84,7 +84,6 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         Execute the given environment update operation in both of the plugin
         hosts, using the environment dictionary provided.
         """
-        env = fetch_env(window)
         for env_cmd in ('envault_internal_env_38', 'envault_internal_env_33'):
             window.run_command(env_cmd, {
                 "command": cmd,
@@ -101,7 +100,11 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         """
         # We only care about build commands and watched commands
         if self.is_build(cmd, args) or self.is_watched_command(cmd):
-            env = fetch_env(window)
+            # Check for a known envault config; if so, fetch the environment
+            # for it. Otherwise, we can just use an empty environment. This is
+            # what happens for windows that don't have a config.
+            config = get_envault_config(window)
+            env = fetch_env(config) if config else { }
             self.execute_env_op(window, cmd, "set", env)
 
 

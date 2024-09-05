@@ -18,7 +18,7 @@ class EnvaultShowVariablesCommand(sublime_plugin.WindowCommand):
     """
     def run(self):
         config = get_envault_config(self.window)
-        env = fetch_env(self.window)
+        env = fetch_env(config)
 
         def ignore(idx): pass
 
