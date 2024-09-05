@@ -2,7 +2,8 @@ import sublime
 
 from os.path import split
 
-from .core import log, ev_setting, get_envault_data
+from .core import ev_setting, get_envault_data
+from .logging import log
 
 
 ## ----------------------------------------------------------------------------

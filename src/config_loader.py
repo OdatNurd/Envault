@@ -1,7 +1,7 @@
 from os.path import isdir, join, exists
 from os import scandir
 
-from .core import log
+from .logging import log
 
 from ..yaml import safe_load
 from ..yaml.scanner import ScannerError

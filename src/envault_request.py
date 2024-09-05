@@ -1,6 +1,7 @@
 import sublime
 
-from .core import log, ev_setting
+from .core import ev_setting
+from .logging import log
 
 import certifi
 

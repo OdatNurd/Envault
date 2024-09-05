@@ -6,8 +6,9 @@ from sublime import ListInputItem
 from os.path import split, splitext
 from os import sep
 
-from ..core import log, get_envault_data, set_envault_data
+from ..core import get_envault_data, set_envault_data
 from ..config_loader import scan_project_configs, load_and_fetch_config
+from ..logging import log
 
 
 ## ----------------------------------------------------------------------------
