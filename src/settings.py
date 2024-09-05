@@ -14,6 +14,9 @@ def ev_setting(key):
             # Template file actually lists some packages here.
             "added_watch_commands": [],
 
+            "default_api_key": "envault_dev_key",
+            "default_api_url": "http://localhost:8787/",
+
             "debug": False
         }
 

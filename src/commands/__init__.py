@@ -1,11 +1,12 @@
 from ...envault import reload
 
 reload("src.commands", ["env_command","choose_config", "reload_config",
-                        "show_variables"])
+                        "create_config", "show_variables"])
 
 from .env_command import EnvaultEnvironmentCommand
 from .choose_config import EnvaultChooseConfigCommand
 from .reload_config import EnvaultReloadConfigCommand
+from .create_config import EnvaultCreateConfigCommand
 from .show_variables import EnvaultShowVariablesCommand
 
 __all__ = [
@@ -16,5 +17,6 @@ __all__ = [
     # file
     "EnvaultChooseConfigCommand",
     "EnvaultReloadConfigCommand",
+    "EnvaultCreateConfigCommand",
     "EnvaultShowVariablesCommand",
 ]

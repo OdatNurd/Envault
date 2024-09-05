@@ -12,6 +12,14 @@
     // an updated environment.
     "added_watch_commands": ["exec", "terminus_exec", "terminus_open"],
 
+    // When creating a new empty envault configuration file, this sets what the
+    // api key in the generated file starts off with by default.
+    "default_api_key": "envault_dev_key",
+
+    // When creating a new empty envault configuration file, this sets what the
+    // url in the generated file starts off with by default.
+    "default_api_url": "http://localhost:8787/",
+
     // When diagnosing issues with the package, this value can be set to true to
     // enable additional debugging information.
     //

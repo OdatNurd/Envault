@@ -139,5 +139,16 @@ class EnvaultEventListener(sublime_plugin.EventListener):
             check_project_for_envault_config(window)
 
 
+    def on_post_save(self, view):
+        """
+        When a file is saved, if it appears in the list of currently loaded
+        configuration values, reload and re-query the environment associated
+        with it.
+        """
+        config_file = view.file_name()
+        if has_env(config_file):
+            log(f"reloading envault config {config_file}")
+            load_and_fetch_config(config_file)
+
 
 ## ----------------------------------------------------------------------------

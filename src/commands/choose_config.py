@@ -101,11 +101,20 @@ class EnvaultChooseConfigCommand(sublime_plugin.WindowCommand):
 
 
     def input(self, args):
+        """
+        If any arguments to the command are missing, prompt for them.
+        """
         if "config" not in args:
             return ConfigInputHandler(self.window)
 
 
     def input_description(self):
+        """
+        Override the command name that is displayed in the command palette
+        while the command is actively collecting arguments; this makes the
+        command arguments easier to understand, and makes more room for the
+        input.
+        """
         return "Envault Config"
 
 

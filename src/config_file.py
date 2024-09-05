@@ -1,5 +1,9 @@
+import sublime
+
 from os.path import isdir, join, exists, split
-from os import scandir
+from os import scandir, makedirs
+
+from textwrap import dedent
 
 from .logging import log
 
@@ -24,6 +28,22 @@ CONFIG_FOLDER = "envault"
 # All Envault configuration files must, in addition to being in the above
 # mentioned folder, have an extension that matches this one.
 CONFIG_EXTENSION = ".yml"
+
+# When creating a new configuration
+CONFIG_TEMPLATE = dedent("""
+# Envault to request keys from, and the API key to use to authenticate the
+# request. The API key provided here specifies the name of an environment
+# variable whose value is the actual API key to use.
+apiKeyName: {apiKeyName}
+url: {url}
+
+# The list of variable specifications to request from the server; each spec
+# will produce some number of environment variables and values. See the
+# Envault server documentation for more information.
+vars: []
+#  - spec1
+#  - spec2
+""").lstrip()
 
 
 ## ----------------------------------------------------------------------------
@@ -105,7 +125,11 @@ def _accept_loaded_config(var_list, config_file):
     """
     if var_list is None:
         log("no variables to set; request failed")
-        clear_env(config_file)
+        # If a request failed, update the cache to not have any values, but
+        # keep a record of this config still being active. This allows the
+        # post-save event listener to tell that this config is still active,
+        # so that fixing it if you break it will allow it to reload.
+        store_env(config_file, {})
         return
 
     log(f"loaded envault config from {split(config_file)[1]}", status=True)
@@ -179,6 +203,33 @@ def scan_project_configs(window):
         files.extend(scan_folder(path))
 
     return files
+
+
+## ----------------------------------------------------------------------------
+
+
+def create_config(config_name, apiKeyName, url, window=None):
+    """
+    Given the name of a configuration file to create, create one using the
+    template, filling out the API key name and URL from the values provided
+    in the call.
+
+    The created file will be opened for editing in the window provided; if no
+    window is provided, the current window will be opened instead.
+
+    This will ensure that the folder that should contain the file exists, if it
+    does not yet. It will also clobber over any existing file that might exist.
+    """
+    path, _ = split(config_name)
+    makedirs(path, exist_ok=True)
+
+    with open(config_name, "w") as file:
+        file.write(CONFIG_TEMPLATE.format(
+            apiKeyName=apiKeyName,
+            url=url))
+
+    window = window or sublime.active_window()
+    window.open_file(config_name)
 
 
 ## ----------------------------------------------------------------------------
