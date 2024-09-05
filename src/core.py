@@ -54,7 +54,7 @@ def log(msg, *args, dialog=False, error=False, status=False, **kwargs):
         print("Envault: {msg}".format(msg=line))
 
     if status:
-        sublime.status_message(message)
+        sublime.status_message(msg)
 
     if dialog:
         sublime.message_dialog(msg)

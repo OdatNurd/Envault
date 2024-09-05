@@ -25,13 +25,23 @@ class ConfigInputHandler(sublime_plugin.ListInputHandler):
         # window; these files may or may not contain valid configs; all we can
         # say is, they seem to be files that exist at the moment./
         configs = scan_project_configs(window)
-
         self.choices = list(configs)
-        self.current = current if current in configs else self.choices[0]
+
+        # If the currently selected item is in the list of configs, then store
+        # that one as current. Otherwise, pluck the first one from the list,
+        # but only if there IS a list.
+        if current in configs:
+            self.current = current
+        else:
+            self.current = self.choices[0] if self.choices else None
 
 
     def list_items(self):
-        return self.choices, self.choices.index(self.current)
+        # The selected index should be the index that holds the current item,
+        # but only if there IS a current item (there will not be if there
+        # are no configs present, for example).
+        selected = self.choices.index(self.current) if self.current is not None else 0
+        return self.choices, selected
 
 
 ## ----------------------------------------------------------------------------
@@ -55,6 +65,13 @@ class EnvaultChooseConfigCommand(sublime_plugin.WindowCommand):
     window when it is selected.
     """
     def run(self, config):
+        # If we get invoked with None as a config, it's generally because the
+        # command was invoked from the command palette and the window has no
+        # configs, which causes the list input handler to immediately return
+        # None as the arg.
+        if config is None:
+            return log('no envault configs found in project', status=True)
+
         # Get the envault config for this window, store in the selected config
         # file name, then store the config back into the window.
         envault = get_envault_data(self.window)
