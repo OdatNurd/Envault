@@ -1,7 +1,7 @@
 import sublime
 import sublime_plugin
 
-from .core import ev_setting
+from .settings import ev_setting
 from .env_cache import fetch_env
 
 

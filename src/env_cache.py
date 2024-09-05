@@ -2,7 +2,7 @@ import sublime
 
 from os.path import split
 
-from .core import ev_setting
+from .settings import ev_setting
 from .envault_data import get_envault_config
 from .logging import log
 
