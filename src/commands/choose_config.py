@@ -1,6 +1,11 @@
 import sublime
 import sublime_plugin
 
+from sublime import ListInputItem
+
+from os.path import split, splitext
+from os import sep
+
 from ..core import log, get_envault_data, set_envault_data
 from ..config_loader import scan_project_configs, load_if_exists
 
@@ -36,12 +41,31 @@ class ConfigInputHandler(sublime_plugin.ListInputHandler):
             self.current = self.choices[0] if self.choices else None
 
 
+    def placeholder(self):
+        return "Choose Envault config for this window"
+
+
     def list_items(self):
         # The selected index should be the index that holds the current item,
         # but only if there IS a current item (there will not be if there
         # are no configs present, for example).
         selected = self.choices.index(self.current) if self.current is not None else 0
-        return self.choices, selected
+
+        def make_item(entry):
+            # Split the absolute path into a path and filename, then split the
+            # extension off the filename to get just the name of the config
+            # itself.
+            pathname, filename = split(entry)
+            config, _ = splitext(filename)
+
+            # For the path name, split it on path separators and take the one
+            # second from the end, since we know it ends in the common config
+            # folder.
+            config_path = pathname.split(sep)[-2]
+
+            return ListInputItem(config, value=entry, details=config_path)
+
+        return [make_item(choice) for choice in self.choices], selected
 
 
 ## ----------------------------------------------------------------------------
