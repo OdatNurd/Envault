@@ -33,12 +33,13 @@ class EnvaultRequestThread(Thread):
     of success, this is a dict that contains the keys; for failure, the result
     is None.
     """
-    def __init__(self, url, apiKeyName, vars, callback):
+    def __init__(self, url, apiKeyName, vars, config_file, callback):
         super().__init__()
 
         self.url = self.update_url(url)
         self.apiKeyName = apiKeyName
         self.vars = vars
+        self.config_file = config_file
         self.callback = callback
 
     def update_url(self, url):
@@ -101,18 +102,21 @@ class EnvaultRequestThread(Thread):
                 body = res.read().decode("utf-8")
                 env_keys = sublime.decode_value(body)
 
+        # TODO: This does not handle errors well; at the moment the service
+        #       does not well define error states, so we're punting for the
+        #       MVP version.
         except HTTPError as e:
-            log(f"error fetching from {self.url}")
+            log(f"error fetching from {self.url} (from: {self.config_file})")
             log(f"http error: {e.code}")
-            log(f"error while fetching the contents of the config", error=True)
+            log(f"error while fetching data from Envault", error=True)
 
             # The error result is sometimes but not always a JSON object, so
             # for the time being just dump it to the console; we can work out
             # how to get a meaningful error message out of it later.
-            print(f"{str(e.read().decode('utf-8'))}")
+            log(f"{str(e.read().decode('utf-8'))}")
 
         except URLError as e:
-            log(f"error fetching from {self.url}")
+            log(f"error fetching from {self.url} (from: {self.config_file})")
             log(f"url error: {e.reason}")
 
         sublime.set_timeout(lambda: self.callback(env_keys))

@@ -163,7 +163,7 @@ def load_and_fetch_config(config_file):
 
     # Kick off a background request to fetch the actual environment keys
     # that are being requested by this config.
-    EnvaultRequestThread(**config, callback=
+    EnvaultRequestThread(**config, config_file=config_file, callback=
                          lambda r: _accept_loaded_config(r, config_file)).start()
 
 
