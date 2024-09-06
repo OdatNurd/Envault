@@ -10,7 +10,7 @@ from .logging import log
 from ..yaml import safe_load
 from ..yaml.scanner import ScannerError
 
-from .env_cache import store_env, clear_env
+from .env_cache import store_env
 from .envault_request import EnvaultRequestThread
 
 from .settings import ev_setting

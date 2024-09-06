@@ -2,6 +2,7 @@ import sublime
 import sublime_plugin
 
 from .config_file import scan_project_configs, load_and_fetch_config
+from .config_status import set_status_config
 from .env_cache import has_env, fetch_env
 from .envault_data import get_envault_config, set_envault_config
 from .logging import log
@@ -149,6 +150,32 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         if ev_setting("reload_config_on_save") and has_env(config_file):
             log(f"reloading envault config {config_file}")
             load_and_fetch_config(config_file)
+
+
+    def update_view_status_keys(self, view):
+        """
+        Update the status keys in the provided view so that they properly track
+        the envault configuration that is currently active, if any.
+        """
+        if view.window():
+            config = get_envault_config(view.window())
+            set_status_config(config, view)
+
+
+    # When a file is loaded or cloned, or when a new tab is created, ensure
+    # that it has the appropriate view status keys.
+    on_load = on_clone = on_new = update_view_status_keys
+
+
+    def on_pre_move(self, view):
+        """
+        Since the event to tell us when an event to move a view from one
+        window to another does not trigger when you move a view out into its
+        own new window, handle the intent to move a file by deferring the
+        status update operation until after the move has occured so that the
+        correct configuration is picked up.
+        """
+        sublime.set_timeout(lambda: self.update_view_status_keys(view))
 
 
 ## ----------------------------------------------------------------------------

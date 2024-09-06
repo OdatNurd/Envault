@@ -8,6 +8,7 @@ from os import sep
 
 from ..envault_data import get_envault_config, set_envault_config
 from ..config_file import scan_project_configs, load_and_fetch_config
+from ..config_status import set_status_config
 from ..logging import log
 
 
@@ -97,6 +98,7 @@ class EnvaultChooseConfigCommand(sublime_plugin.WindowCommand):
         set_envault_config(self.window, config)
 
         # Load it up
+        set_status_config(config, self.window)
         load_and_fetch_config(config)
 
 

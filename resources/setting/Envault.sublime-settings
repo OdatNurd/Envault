@@ -1,4 +1,19 @@
 {
+    // When an Envault configuration is active within a current window, the
+    // status bar will contain a text segment that indicates this so that you
+    // can tell what environment is active.
+    //
+    // This variable controls what that text looks like. This supports the
+    // variables: $folder, $file, $file_path, $file_name, $file_base_name,
+    //            $file_extension
+    //
+    // $file and the variations represent the currently selected configuration
+    // file, while $folder is the last path segment of the configuration file
+    // location (the folder within which the envault configuratipon is stored).
+    //
+    // Setting this to an empty string will disable the status bar formatting.
+    "status_bar_format": "[Envault: ${file_base_name}]",
+
     // Envault always updates the environment whenever the "build" command is
     // executed to ensure that the environment for any builds that trigger in
     // a project have the appropriate environment.
