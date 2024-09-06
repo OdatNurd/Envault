@@ -24,5 +24,6 @@ __all__ = [
     "EnvaultChooseConfigCommand",
     "EnvaultReloadConfigCommand",
     "EnvaultCreateConfigCommand",
+    "EnvaultOpenConfigCommand",
     "EnvaultShowVariablesCommand",
 ]

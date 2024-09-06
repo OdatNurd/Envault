@@ -28,6 +28,9 @@
   { "caption": "Envault: Create New Config",
     "command": "envault_create_config"
   },
+  { "caption": "Envault: Open Current Config",
+    "command": "envault_open_config"
+  },
   { "caption": "Envault: Show Variables",
     "command": "envault_show_variables"
   },
