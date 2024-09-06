@@ -8,7 +8,7 @@ description: Installing the Envault package for Sublime Text
 ## Requirements
 
 `Envault` supports Sublime Text across Windows, MacOS and Linux, but requires
-`Sublime Text Build >=4180+` in order to work properly.
+`Sublime Text Build >=4095+` in order to work properly.
 
 
 ## Package Control

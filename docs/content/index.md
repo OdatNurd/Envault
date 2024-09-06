@@ -33,4 +33,4 @@ are always applied, whether running a
 using [Terminus](https://packagecontrol.io/packages/Terminus) to open a terminal
 to run interactive commands.
 
-The package currently requires Sublime Text build 4180 or higher.
+The package currently requires Sublime Text build 4095 or higher.

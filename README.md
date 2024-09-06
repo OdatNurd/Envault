@@ -16,7 +16,7 @@ This particular package is a Sublime Text wrapper around the Envault service,
 allowing you to seamlessly use Envault in your Sublime projects with no extra
 tooling required.
 
-This package requires, at minimum, Sublime Text version 4180.
+This package requires, at minimum, Sublime Text version 4095.
 
 ---
 
