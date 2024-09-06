@@ -17,6 +17,8 @@ def ev_setting(key):
             "default_api_key": "envault_dev_key",
             "default_api_url": "http://localhost:8787/",
 
+            "reload_config_on_save": True,
+
             "debug": False
         }
 

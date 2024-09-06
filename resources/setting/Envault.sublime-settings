@@ -20,6 +20,11 @@
     // url in the generated file starts off with by default.
     "default_api_url": "http://localhost:8787/",
 
+    // When enabled, saving an Envault configuration file that is currently
+    // loaded and active in any window will cause the config to be reloaded and
+    // keys re-requested from the server.
+    "reload_config_on_save": true,
+
     // When diagnosing issues with the package, this value can be set to true to
     // enable additional debugging information.
     //

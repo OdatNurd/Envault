@@ -146,7 +146,7 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         with it.
         """
         config_file = view.file_name()
-        if has_env(config_file):
+        if ev_setting("reload_config_on_save") and has_env(config_file):
             log(f"reloading envault config {config_file}")
             load_and_fetch_config(config_file)
 
