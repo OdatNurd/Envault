@@ -9,7 +9,7 @@
     //
     // $file and the variations represent the currently selected configuration
     // file, while $folder is the last path segment of the configuration file
-    // location (the folder within which the envault configuratipon is stored).
+    // location (the folder within which the envault configuration is stored).
     //
     // Setting this to an empty string will disable the status bar formatting.
     "status_bar_format": "[Envault: ${file_base_name}]",
@@ -23,7 +23,7 @@
     // actively running.
     //
     // The default ensures that directly executed Terminus terminals as well as
-    // explict invocations of the exec commands (outside of a build) also have
+    // explicit invocations of the exec commands (outside of a build) also have
     // an updated environment.
     "added_watch_commands": ["exec", "terminus_exec", "terminus_open"],
 

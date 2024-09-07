@@ -13,13 +13,21 @@ nav:
     - "About": index.md
   - Installation:
     - "How to Install": install/index.md
+  - Usage:
+    - "Using Envault": usage/index.md
+    - "QuickStart": usage/quickstart.md
+    - "Config File Format": usage/config_format.md
   - Configuration:
     - "Package Setup": config/index.md
     - "Settings": config/settings.md
     - "Key Bindings": config/keybinds.md
-  - Usage:
-    - "Using Envault": usage/index.md
-    - "QuickStart": usage/quickstart.md
+  - Commands:
+    - "Envault Commands": command/index.md
+    - "Choose Active Config": command/choose_config.md
+    - "Open Current Config": command/open_config.md
+    - "Reload Config": command/reload_config.md
+    - "Create New File": command/create_config.md
+    - "Show Variables": command/show_variables.md
   - "FAQ": faq.md
   - Changelog:
     - "Changelog": changelog.md

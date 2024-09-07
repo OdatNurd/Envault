@@ -5,8 +5,11 @@ description: The release history for Envault
 
 # Changelog
 
-This would be a nice list of change revisions, including their dates, and
-what they actually contained.
+## ^^0.0.1^^ - Initial Version (09/07/2024)
 
-Maybe they also link to an asset to download, although that's probably quite
-dumb, so maybe don't.
+Initial version of the package, fleshed out during streams on my
+[Twitch Channel](https://twitch.tv/odatnurd) as an initial version of the
+package for [@axel669](https://github.com/axel669).
+
+This version works, but currently requires that you run your own version of the
+server since an official one is not yet available.
