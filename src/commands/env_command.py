@@ -49,12 +49,12 @@ class EnvaultEnvironmentCommand(sublime_plugin.WindowCommand):
         return s.get("debug", False)
 
 
-    def run(self, command, operation, env):
+    def run(self, command, operation, config_file, env):
         """
         Execute the specified environment operation using the provided args.
         """
         if operation == "set":
-            self.set_env(command, env)
+            self.set_env(command, config_file, env)
 
         elif operation == "restore":
             self.restore_env(command)
@@ -63,7 +63,7 @@ class EnvaultEnvironmentCommand(sublime_plugin.WindowCommand):
             print("Envault: unknown env operation '%s' in %s" % (operation, host))
 
 
-    def set_env(self, command, env):
+    def set_env(self, command, config_file, env):
         """
         Set the environment for the plugin host by extending the currently
         available environment with the keys from the provided dictionary.
@@ -88,12 +88,23 @@ class EnvaultEnvironmentCommand(sublime_plugin.WindowCommand):
         new_env = self.original_env.copy()
         new_env.update(env)
 
-        # If the new environment does not already have an ENVAULT key, then add
-        # one in here explicitly so that launched tasks can determine whether
-        # or not they are running in an envault controlled environment.
-        if "ENVAULT" not in new_env:
-            new_env["ENVAULT"] = "1"
+        # Set up some environment values to be included in the new environment
+        # if the applied environment keys does not already include them; they
+        # can be used to allow launched tasks to know how they're running.
+        extra_vars = {
+            "ENVAULT": "1",
+            "ENVAULT_CONFIG": config_file
+        }
 
+        # Explicitly set the variables in the new environment if they do not
+        # exist in the environment being applied; this ensures that if the
+        # original environment has these values set, we can still override
+        # them.
+        for var, value in extra_vars.items():
+            if var not in env:
+                new_env[var] = value
+
+        # Apply the new environment now
         environ.clear()
         environ.update(new_env)
 

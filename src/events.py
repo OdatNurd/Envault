@@ -82,7 +82,7 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         return command in ev_setting("added_watch_commands")
 
 
-    def execute_env_op(self, window, cmd, operation, env):
+    def execute_env_op(self, window, cmd, operation, config_file, env):
         """
         Execute the given environment update operation in both of the plugin
         hosts, using the environment dictionary provided.
@@ -91,6 +91,7 @@ class EnvaultEventListener(sublime_plugin.EventListener):
             window.run_command(env_cmd, {
                 "command": cmd,
                 "operation": operation,
+                "config_file": config_file,
                 "env": env
             })
 
@@ -108,7 +109,7 @@ class EnvaultEventListener(sublime_plugin.EventListener):
             # what happens for windows that don't have a config.
             config = get_envault_config(window)
             env = fetch_env(config) if config else { }
-            self.execute_env_op(window, cmd, "set", env)
+            self.execute_env_op(window, cmd, "set", config, env)
 
 
     def on_post_window_command(self, window, cmd, args):
@@ -119,7 +120,7 @@ class EnvaultEventListener(sublime_plugin.EventListener):
         """
         # We only care about build commands and watched commands
         if self.is_build(cmd, args) or self.is_watched_command(cmd):
-            self.execute_env_op(window, cmd, "restore", { })
+            self.execute_env_op(window, cmd, "restore", "", { })
 
 
     def on_load_project(self, window):
