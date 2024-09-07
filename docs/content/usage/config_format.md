@@ -51,8 +51,8 @@ This specifies a list of 0 or more keys that should be specified in the
 `Envault` request.
 
 Each key specified here must be a key that is accessible by the provided
-`apiKeyName`, and will result in an arbitrarily sized set of environment
-variables and values to be returned by the service.
+`apiKeyName`, and will result in an environment variables and its value being
+returned by the service.
 
 !!! tip
 
