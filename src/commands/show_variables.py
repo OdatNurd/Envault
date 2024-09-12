@@ -25,11 +25,31 @@ class EnvaultShowVariablesCommand(sublime_plugin.WindowCommand):
         if not env:
             return log(f"current configuration contains no variables", status=True)
 
-        def ignore(_): pass
+        items = list(env.keys())
 
-        self.window.show_quick_panel(list(env.keys()),
-            placeholder=config,
-            on_select=ignore)
+        primary = 'cmd' if sublime.platform == 'osx' else 'ctrl'
+        self.window.show_quick_panel(items,
+            placeholder=f'{primary}+enter to copy variable value to the clipboard',
+            on_select=lambda idx,evt: self.pick(idx, evt, env, items),
+            flags=sublime.QuickPanelFlags.WANT_EVENT)
+
+
+    def pick(self, idx, evt, env, items):
+        """
+        On a pick that was not a cancel and where the key used to select the
+        item included the primary key for the platform (ctrl on Linux/Windows
+        or cmd on MacOS), copy the value of that variable to the clipboard.
+        """
+        if idx == -1:
+            return
+
+        if evt["modifier_keys"].get("primary") is None:
+            return log(f"key value not copied", status=True)
+
+        key = items[idx]
+        value = env[key]
+        sublime.set_clipboard(value)
+        log(f"Copied value of '{key}' to the clipboard", status=True)
 
 
     def is_enabled(self):

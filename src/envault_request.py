@@ -113,7 +113,7 @@ class EnvaultRequestThread(Thread):
             # The error result is sometimes but not always a JSON object, so
             # for the time being just dump it to the console; we can work out
             # how to get a meaningful error message out of it later.
-            log(f"{str(e.read().decode('utf-8'))}")
+            print(f"{str(e.read().decode('utf-8'))}")
 
         except URLError as e:
             log(f"error fetching from {self.url} (from: {self.config_file})")
